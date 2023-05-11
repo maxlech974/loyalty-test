@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -31,6 +33,14 @@ class User
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $birthDate = null;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: ExpenseNote::class)]
+    private Collection $expenseNotes;
+
+    public function __construct()
+    {
+        $this->expenseNotes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -81,6 +91,36 @@ class User
     public function setBirthDate(\DateTimeInterface $birthDate): self
     {
         $this->birthDate = $birthDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ExpenseNote>
+     */
+    public function getExpenseNotes(): Collection
+    {
+        return $this->expenseNotes;
+    }
+
+    public function addExpenseNote(ExpenseNote $expenseNote): self
+    {
+        if (!$this->expenseNotes->contains($expenseNote)) {
+            $this->expenseNotes->add($expenseNote);
+            $expenseNote->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExpenseNote(ExpenseNote $expenseNote): self
+    {
+        if ($this->expenseNotes->removeElement($expenseNote)) {
+            // set the owning side to null (unless already changed)
+            if ($expenseNote->getUser() === $this) {
+                $expenseNote->setUser(null);
+            }
+        }
 
         return $this;
     }

@@ -20,11 +20,11 @@ Votre API est maintenant accessible à l'adresse http://localhost:8080 (ou le po
 
 Cette API contient les routes suivantes :
 
-- `GET /notes` : récupérer toutes les notes de frais
-- `GET /notes/{id}` : récupérer une note de frais spécifique
-- `POST /notes` : créer une nouvelle note de frais
-- `PUT /notes/{id}` : mettre à jour une note de frais spécifique
-- `DELETE /notes/{id}` : supprimer une note de frais spécifique
+- `GET /api/expense_notes` : récupérer toutes les notes de frais
+- `GET /api/expense_notes/{id}` : récupérer une note de frais spécifique
+- `POST /api/expense_notes` : créer une nouvelle note de frais
+- `PUT /api/expense_notes/{id}` : mettre à jour une note de frais spécifique
+- `DELETE /api/expense_notes/{id}` : supprimer une note de frais spécifique
 
 ## Tests
 
