@@ -10,9 +10,9 @@ Pour faire fonctionner ce projet, vous devez avoir installé Docker et Docker-Co
 
 ### Construisez et démarrez les conteneurs Docker :
 
-    ```bash
-    docker-compose up -d
-    ```
+```bash
+docker-compose up -d
+```
 
 Votre API est maintenant accessible à l'adresse http://localhost:8080 (ou le port que vous avez configuré dans vos variables d'environnement .env).
 
