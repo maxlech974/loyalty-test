@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+
+  php:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./app:/var/www/html
+    user: "${UID}:${GID}"
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./app:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - "${NGINX_PORTS}:80"
+    depends_on:
+      - php
+
+  db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "${MYSQL_PORTS}:3306"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      PMA_HOST: db
+      PMA_PORT: ${MYSQL_PORTS}
+    ports:
+      - "${PHPMYADMIN_PORTS}:8080"
+    depends_on:
+      - db
+
+volumes:
+  db_data:
