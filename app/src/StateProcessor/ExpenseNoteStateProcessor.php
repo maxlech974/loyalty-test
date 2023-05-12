@@ -1,8 +1,6 @@
 <?php
 namespace App\StateProcessor;
 
-// use ApiPlatform\Core\State\ProcessorInterface;
-
 use ApiPlatform\Metadata\Operation;
 use ApiPlatform\State\ProcessorInterface;
 use App\DTO\ExpenseNoteDto;
