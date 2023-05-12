@@ -3,8 +3,15 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Delete;
+use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use App\DTO\ExpenseNoteDto;
 use App\Repository\ExpenseNoteRepository;
+use App\StateProcessor\ExpenseNoteStateProcessor;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -13,8 +20,19 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ExpenseNoteRepository::class)]
 #[ApiResource(
     normalizationContext: ['groups' => ['expenseNote:read']],
-    denormalizationContext: ['groups' => ['expenseNote:write']]
+    denormalizationContext: ['groups' => ['expenseNote:write', 'expenseNote:input']], 
 )]
+#[Post(
+    input: ExpenseNoteDto::class,
+    processor: ExpenseNoteStateProcessor::class
+)]
+#[Put(
+    input: ExpenseNoteDto::class,
+    processor: ExpenseNoteStateProcessor::class
+)]
+#[GetCollection()]
+#[Get()]
+#[Delete()]
 class ExpenseNote
 {
     #[ORM\Id]
@@ -29,7 +47,7 @@ class ExpenseNote
 
     #[Assert\GreaterThan(0, message: "The amount must be a positive number greater than zero.")]
     #[ORM\Column(type: Types::DECIMAL, precision: 7, scale: 2)]
-    #[Groups(["expenseNote:read", "expenseNote:write"])]
+    //#[Groups(["expenseNote:read", "expenseNote:write"])]
     private ?string $amount = null;
 
     #[ORM\Column(length: 255)]
@@ -96,9 +114,12 @@ class ExpenseNote
         return $this->registrationDate;
     }
 
+    #[ORM\PrePersist]
     public function setRegistrationDate(\DateTimeInterface $registrationDate): self
     {
-        $this->registrationDate = $registrationDate;
+        if ($this->registrationDate === null) {
+            $this->registrationDate = new \DateTimeImmutable();
+        }
 
         return $this;
     }

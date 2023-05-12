@@ -14,7 +14,6 @@ class Company
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["expenseNote:read", "expenseNote:write"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]

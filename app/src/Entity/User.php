@@ -18,7 +18,6 @@ class User
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["expenseNote:read", "expenseNote:write"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -37,7 +36,6 @@ class User
     private ?string $email = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
-    #[Groups(["expenseNote:read", "expenseNote:write"])]
     private ?\DateTimeInterface $birthDate = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: ExpenseNote::class)]
