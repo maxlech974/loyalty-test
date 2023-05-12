@@ -16,7 +16,7 @@ id -u && id -g
 3. configurez le .env à la racine du projet avec les bons UID et GID
 4. dans le dossier courant tapper la commande: 
 ```bash
-sudo chown -R ./* <votre-UID>:<votre-GID>
+sudo chown -R  <votre-UID>:<votre-GID> ./
 ```
 
 ### Construisez et démarrez les conteneurs Docker :
