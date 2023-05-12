@@ -9,6 +9,8 @@ services:
     volumes:
       - ./app:/var/www/html
     user: "${UID}:${GID}"
+    depends_on:
+      - db
 
   nginx:
     image: nginx:latest

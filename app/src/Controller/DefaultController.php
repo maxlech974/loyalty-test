@@ -11,7 +11,7 @@ class DefaultController extends AbstractController
     #[Route('/', name: 'default')]
     public function index(): Response
     {
-        // Redirect to the API documentation
+        // Redirection vers la documentation de l'API
         return $this->redirect('/api', 301);
     }
 }

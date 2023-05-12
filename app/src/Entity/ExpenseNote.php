@@ -6,7 +6,6 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Delete;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
-use ApiPlatform\Metadata\Patch;
 use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use App\DTO\ExpenseNoteDto;
@@ -47,7 +46,7 @@ class ExpenseNote
 
     #[Assert\GreaterThan(0, message: "The amount must be a positive number greater than zero.")]
     #[ORM\Column(type: Types::DECIMAL, precision: 7, scale: 2)]
-    //#[Groups(["expenseNote:read", "expenseNote:write"])]
+    #[Groups(["expenseNote:read", "expenseNote:write"])]
     private ?string $amount = null;
 
     #[ORM\Column(length: 255)]
@@ -114,12 +113,9 @@ class ExpenseNote
         return $this->registrationDate;
     }
 
-    #[ORM\PrePersist]
     public function setRegistrationDate(\DateTimeInterface $registrationDate): self
     {
-        if ($this->registrationDate === null) {
-            $this->registrationDate = new \DateTimeImmutable();
-        }
+        $this->registrationDate = $registrationDate;
 
         return $this;
     }
