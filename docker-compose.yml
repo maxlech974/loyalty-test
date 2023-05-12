@@ -36,9 +36,9 @@ services:
     image: phpmyadmin/phpmyadmin:latest
     environment:
       PMA_HOST: db
-      PMA_PORT: ${MYSQL_PORTS}
+      PMA_PORT: 3306
     ports:
-      - "${PHPMYADMIN_PORTS}:8080"
+      - "${PHPMYADMIN_PORTS}:80"
     depends_on:
       - db
 

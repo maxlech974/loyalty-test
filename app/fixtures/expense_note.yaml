@@ -1,0 +1,8 @@
+App\Entity\ExpenseNote:
+    expense_note_{1..100}:
+        noteDate: '<dateTimeThisYear()>'
+        amount: '<randomFloat(2, 10, 100)>'
+        type: '<randomElement(["essence", "péage", "repas", "conférence"])>'
+        registrationDate: '<dateTimeThisYear()>'
+        company: '@company_*'
+        user: '@user_1'

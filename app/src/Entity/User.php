@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
@@ -17,21 +18,26 @@ class User
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["expenseNote:read", "expenseNote:write"])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["expenseNote:read", "expenseNote:write"])]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["expenseNote:read", "expenseNote:write"])]
     private ?string $firstName = null;
 
     #[Assert\Email(
         message: 'The email "{{ value }}" is not a valid email.'
     )]
+    #[Groups(["expenseNote:read", "expenseNote:write"])]
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(["expenseNote:read", "expenseNote:write"])]
     private ?\DateTimeInterface $birthDate = null;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: ExpenseNote::class)]

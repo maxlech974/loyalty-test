@@ -3,37 +3,51 @@
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\GetCollection;
 use App\Repository\ExpenseNoteRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ExpenseNoteRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    normalizationContext: ['groups' => ['expenseNote:read']],
+    denormalizationContext: ['groups' => ['expenseNote:write']]
+)]
 class ExpenseNote
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(["expenseNote:read", "expenseNote:write"])]
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(["expenseNote:read", "expenseNote:write"])]
     private ?\DateTimeInterface $noteDate = null;
 
+    #[Assert\GreaterThan(0, message: "The amount must be a positive number greater than zero.")]
     #[ORM\Column(type: Types::DECIMAL, precision: 7, scale: 2)]
+    #[Groups(["expenseNote:read", "expenseNote:write"])]
     private ?string $amount = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(["expenseNote:read", "expenseNote:write"])]
     private ?string $type = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Groups(["expenseNote:read", "expenseNote:write"])]
     private ?\DateTimeInterface $registrationDate = null;
 
     #[ORM\ManyToOne(inversedBy: 'expenseNotes')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["expenseNote:read", "expenseNote:write"])]
     private ?Company $company = null;
 
     #[ORM\ManyToOne(inversedBy: 'expenseNotes')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["expenseNote:read", "expenseNote:write"])]
     private ?User $user = null;
 
     public function getId(): ?int

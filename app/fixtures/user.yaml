@@ -1,0 +1,6 @@
+App\Entity\User:
+    user_1:
+        name: '<lastName()>'
+        firstName: '<firstName()>'
+        email: '<email()>'
+        birthDate: '<dateTimeBetween("-40 years", "-20 years")>'
