@@ -22,16 +22,24 @@ use Symfony\Component\Validator\Constraints as Assert;
     denormalizationContext: ['groups' => ['expenseNote:write', 'expenseNote:input']], 
 )]
 #[Post(
+    uriTemplate: '/expense',
     input: ExpenseNoteDto::class,
     processor: ExpenseNoteStateProcessor::class
 )]
 #[Put(
+    uriTemplate: '/expense/{id}',
     input: ExpenseNoteDto::class,
     processor: ExpenseNoteStateProcessor::class
 )]
-#[GetCollection()]
-#[Get()]
-#[Delete()]
+#[GetCollection(
+    uriTemplate: '/expense',
+)]
+#[Get(
+    uriTemplate: '/expense/{id}',
+)]
+#[Delete(
+    uriTemplate: '/expense/{id}',
+)]
 class ExpenseNote
 {
     #[ORM\Id]

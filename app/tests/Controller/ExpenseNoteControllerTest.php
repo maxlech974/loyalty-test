@@ -14,7 +14,9 @@ use Symfony\Component\Process\Process;
  * @package App\Tests\Controller
  */
 class ExpenseNoteControllerTest extends WebTestCase
-{
+{  
+    private const PREFIX_URL = '/api/expense';
+
     /**
      * @var \Symfony\Bundle\FrameworkBundle\KernelBrowser
      */
@@ -37,6 +39,7 @@ class ExpenseNoteControllerTest extends WebTestCase
             ->get('doctrine')
             ->getRepository(\App\Entity\ExpenseNote::class)
             ->findOneBy([]);
+
     }
 
     /**
@@ -59,9 +62,10 @@ class ExpenseNoteControllerTest extends WebTestCase
      */
     public function testPostExpenseNote(): void
     {
+
         $this->client->request(
             'POST',
-            '/api/expense_notes',
+            self::PREFIX_URL,
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
@@ -77,6 +81,7 @@ class ExpenseNoteControllerTest extends WebTestCase
         $responseContent = $this->client->getResponse()->getContent();
         $this->assertJson($responseContent);
         $responseData = json_decode($responseContent, true);
+
         $this->assertArrayHasKey('id', $responseData);
     }
 
@@ -87,7 +92,7 @@ class ExpenseNoteControllerTest extends WebTestCase
     {
         $this->client->request(
             'PUT',
-            '/api/expense_notes/' . $this->expenseNote->getId(),
+            self::PREFIX_URL . '/' . $this->expenseNote->getId(),
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
@@ -112,7 +117,7 @@ class ExpenseNoteControllerTest extends WebTestCase
      */
     public function testGetAllExpenseNotes(): void
     {
-        $this->client->request('GET', '/api/expense_notes');
+        $this->client->request('GET', self::PREFIX_URL);
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
@@ -123,7 +128,7 @@ class ExpenseNoteControllerTest extends WebTestCase
      */
     public function testGetExpenseNoteById():void
     {    
-        $this->client->request('GET', '/api/expense_notes/' . $this->expenseNote->getId());
+        $this->client->request('GET', self::PREFIX_URL . '/' . $this->expenseNote->getId());
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
@@ -133,7 +138,7 @@ class ExpenseNoteControllerTest extends WebTestCase
      */
     public function testDeleteExpenseNote():void
     {
-        $this->client->request('DELETE', '/api/expense_notes/' . $this->expenseNote->getId());
+        $this->client->request('DELETE', self::PREFIX_URL . '/' . $this->expenseNote->getId());
 
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
     }

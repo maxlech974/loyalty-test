@@ -8,30 +8,80 @@ Pour faire fonctionner ce projet, vous devez avoir installé Docker et Docker-Co
 
 ## Installation
 
+1. Clonez le projet depuis le repo github.
+2. Tappez la commande : 
+```bash
+id
+```
+3. configurez le .env à la racine du projet avec les bons UID et GID
+4. dans le dossier courant tapper la commande: 
+```bash
+sudo chown -R ./* UID:GID
+```
+
 ### Construisez et démarrez les conteneurs Docker :
+
+Lancez les commandes :
+
+```bash
+docker-compose build
+```
 
 ```bash
 docker-compose up -d
 ```
 
-Votre API est maintenant accessible à l'adresse http://localhost:8080 (ou le port que vous avez configuré dans vos variables d'environnement .env).
+Votre API est maintenant accessible à l'adresse http://localhost:8087 (ou le port que vous avez configuré dans vos variables d'environnement .env).
+
+PhpMyAdmin est quant à lui accessible sur le port 8088 par défaut.
+
+### Installation du projet symfony et mise en place de la base de données
+
+Pour installer toutes les dépendances du framework et lancer les migrations ainsi qu'installer un jeu de données pour pouvoir tester.
+
+1. Installer les dépendances: 
+
+```bash
+docker-compose exec php composer install
+```
+
+2. Lancer les migrations du schéma des entités vers la base de données
+
+```bash
+docker-compose exec bin/console d:m:m
+```
+
+3. créer la base de donnée de test et lancer les migrations: 
+   
+```bash
+docker-compose exec bin/console d:d:c --env=test
+docker-compose exec bin/console d:m:m --env=test
+```
+
+
+1. lancez les fixtures sur la base de donnée. (les fixtures sont regnérées à chaque test pour les tests)
+
+```bash
+docker-compose exec bin/console hautelook:fixtures:load --env=test
+```
+
 
 ## Utilisation
 
 Cette API contient les routes suivantes :
 
-- `GET /api/expense_notes` : récupérer toutes les notes de frais
-- `GET /api/expense_notes/{id}` : récupérer une note de frais spécifique
-- `POST /api/expense_notes` : créer une nouvelle note de frais
-- `PUT /api/expense_notes/{id}` : mettre à jour une note de frais spécifique
-- `DELETE /api/expense_notes/{id}` : supprimer une note de frais spécifique
+- `GET /api/expense` : récupérer toutes les notes de frais
+- `POST /api/expense` : créer une nouvelle note de frais
+- `GET /api/expense/{id}` : récupérer une note de frais spécifique
+- `PUT /api/expense/{id}` : mettre à jour une note de frais spécifique
+- `DELETE /api/expense/{id}` : supprimer une note de frais spécifique
 
 ## Tests
 
 Pour lancer les tests, vous pouvez exécuter la commande suivante à partir du répertoire racine du projet :
 
 ```bash
-docker-compose exec php vendor/bin/phpunit
+docker-compose exec php bin/phpunit
 ```
 
 Cela exécutera tous les tests unitaires et fonctionnels de l'application.
