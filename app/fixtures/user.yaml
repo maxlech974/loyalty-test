@@ -1,6 +1,7 @@
 App\Entity\User:
     user_1:
-        name: '<lastName()>'
-        firstName: '<firstName()>'
-        email: '<email()>'
+        name: 'LECHERE'
+        firstName: 'Maxime'
+        email: 'maximelechere.dev@gmail.com'
         birthDate: '<dateTimeBetween("-40 years", "-20 years")>'
+        password: 'test'

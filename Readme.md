@@ -52,15 +52,15 @@ docker-compose exec php bin/console d:m:m --no-interaction
 3. créer la base de donnée de test et lancer les migrations: 
    
 ```bash
-docker-compose exec php bin/console d:d:c --env=test --no-interaction
-docker-compose exec php bin/console d:m:m --env=test --no-interaction
+docker-compose exec php bin/console d:d:c --env=test
+docker-compose exec php bin/console d:m:m --env=test
 ```
 
 
 1. lancez les fixtures sur la base de donnée. (les fixtures sont regnérées à chaque test pour les tests)
 
 ```bash
-docker-compose exec php bin/console hautelook:fixtures:load --no-interaction
+docker-compose exec php bin/console hautelook:fixtures:load
 ```
 
 
