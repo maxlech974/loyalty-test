@@ -60,7 +60,7 @@ docker-compose exec bin/console d:m:m --env=test
 1. lancez les fixtures sur la base de donnée. (les fixtures sont regnérées à chaque test pour les tests)
 
 ```bash
-docker-compose exec bin/console hautelook:fixtures:load --env=test
+docker-compose exec bin/console hautelook:fixtures:load
 ```
 
 
