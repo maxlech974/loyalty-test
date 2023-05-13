@@ -27,21 +27,24 @@ class ExpenseNoteControllerTest extends WebTestCase
      */
     private $expenseNote;
 
+    private $token;
+
     /**
      * Préparation de l'environnement de test
      */
     protected function setUp(): void
     {
         $this->loadFixtures();
-
+        
         $this->client = static::createClient();
         $this->expenseNote = $this->client->getContainer()
-            ->get('doctrine')
-            ->getRepository(\App\Entity\ExpenseNote::class)
-            ->findOneBy([]);
-
+        ->get('doctrine')
+        ->getRepository(\App\Entity\ExpenseNote::class)
+        ->findOneBy([]);
+        
+        $this->logUser();
     }
-
+    
     /**
      * Chargement des fixtures avant chaque test
      *
@@ -51,10 +54,34 @@ class ExpenseNoteControllerTest extends WebTestCase
     {
         $process = new Process(['bin/console', 'hautelook:fixtures:load', '--no-interaction']);
         $process->run();
-
+        
         if (!$process->isSuccessful()) {
             throw new \RuntimeException(sprintf('Error loading fixtures: %s', $process->getErrorOutput()));
         }
+    }
+    
+    public function logUser()
+    {
+        $credentials = [
+            'email' => 'maximelechere.dev@gmail.com',
+            'password' => 'test',
+        ];
+
+        $this->client->request(
+            'POST',
+            '/api/login',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode($credentials)
+        );
+
+        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+        $responseContent = $this->client->getResponse()->getContent();
+        $this->assertJson($responseContent);
+        $responseData = json_decode($responseContent, true);
+        $this->token = $responseData['token'];
+        $this->assertArrayHasKey('token', $responseData);
     }
 
     /**
@@ -63,19 +90,12 @@ class ExpenseNoteControllerTest extends WebTestCase
     public function testPostExpenseNote(): void
     {
 
-        $this->client->request(
-            'POST',
-            self::PREFIX_URL,
-            [],
-            [],
-            ['CONTENT_TYPE' => 'application/json'],
-            '{
-                "noteDate": "10/05/2023",
-                "amount": "99.33",
-                "type": "restaurant",
-                "companyName": "test"
-            }'
-        );
+        $this->createAuthenticatedRequest('POST', self::PREFIX_URL, [
+            'noteDate' => '10/05/2023',
+            'amount' => '99.33',
+            'type' => 'restaurant',
+            'companyName' => 'test'
+        ]);
 
         $this->assertEquals(Response::HTTP_CREATED, $this->client->getResponse()->getStatusCode());
         $responseContent = $this->client->getResponse()->getContent();
@@ -90,19 +110,13 @@ class ExpenseNoteControllerTest extends WebTestCase
      */
     public function testPutExpenseNote(): void
     {
-        $this->client->request(
-            'PUT',
-            self::PREFIX_URL . '/' . $this->expenseNote->getId(),
-            [],
-            [],
-            ['CONTENT_TYPE' => 'application/json'],
-            '{
-                "noteDate": "10/05/2023",
-                "amount": "50.46",
-                "type": "hotel",
-                "companyName": "test"
-            }'
-        );
+
+        $this->createAuthenticatedRequest('PUT', self::PREFIX_URL . '/' . $this->expenseNote->getId(), [
+            'noteDate' => '10/05/2023',
+            'amount' => '50.46',
+            'type' => 'hotel',
+            'companyName' => 'test'
+        ]);
     
         $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
         $responseContent = $this->client->getResponse()->getContent();
@@ -117,7 +131,7 @@ class ExpenseNoteControllerTest extends WebTestCase
      */
     public function testGetAllExpenseNotes(): void
     {
-        $this->client->request('GET', self::PREFIX_URL);
+        $this->createAuthenticatedRequest('GET', self::PREFIX_URL);
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
@@ -128,7 +142,7 @@ class ExpenseNoteControllerTest extends WebTestCase
      */
     public function testGetExpenseNoteById():void
     {    
-        $this->client->request('GET', self::PREFIX_URL . '/' . $this->expenseNote->getId());
+        $this->createAuthenticatedRequest('GET', self::PREFIX_URL . '/' . $this->expenseNote->getId());
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
@@ -138,8 +152,32 @@ class ExpenseNoteControllerTest extends WebTestCase
      */
     public function testDeleteExpenseNote():void
     {
-        $this->client->request('DELETE', self::PREFIX_URL . '/' . $this->expenseNote->getId());
+        $this->createAuthenticatedRequest('DELETE', self::PREFIX_URL . '/' . $this->expenseNote->getId());
 
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
+    }
+
+    /**
+     * Crée une requête authentifiée pour le client de test.
+     *
+     * @param string $method La méthode HTTP pour la requête (ex : 'POST', 'GET', 'PUT', etc.).
+     * @param string $url L'URL de la requête.
+     * @param array $content Le corps de la requête, qui sera encodé en JSON.
+     *
+     * @return void
+     */
+    private function createAuthenticatedRequest(string $method, string $url, array $content = []): void
+    {
+        $this->client->request(
+            $method, 
+            $url, 
+            [], 
+            [], 
+            [
+                'CONTENT_TYPE' => 'application/json', 
+                'HTTP_Authorization' => 'Bearer ' . $this->token
+            ], 
+            json_encode($content)
+        );
     }
 }
