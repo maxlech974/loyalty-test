@@ -45,6 +45,7 @@ docker-compose exec php composer install
 
 2. Lancer les migrations du schéma des entités vers la base de données en exécutant la commande suivante :
 
+**Attention chez moi je dois effectuer cette commande deux fois pour que ça fonctionne je ne comprends pas pouquoi**
 ```bash
 docker-compose exec php bin/console d:m:m --no-interaction
 ```
@@ -52,16 +53,30 @@ docker-compose exec php bin/console d:m:m --no-interaction
 3. créer la base de donnée de test et lancer les migrations: 
    
 ```bash
-docker-compose exec php bin/console d:d:c --env=test
-docker-compose exec php bin/console d:m:m --env=test
+docker-compose exec php bin/console d:d:c --env=test --no-interaction
+docker-compose exec php bin/console d:m:m --env=test --no-interaction
 ```
-
-
-1. lancez les fixtures sur la base de donnée. (les fixtures sont regnérées à chaque test pour les tests)
+4. lancez les fixtures sur la base de donnée. (les fixtures sont regnérées à chaque test pour les tests)
 
 ```bash
-docker-compose exec php bin/console hautelook:fixtures:load
+docker-compose exec php bin/console hautelook:fixtures:load --no-interaction
 ```
+
+## Génération des clés JWT
+
+Pour générer les clés nécessaires pour le JWT, exécutez les commandes suivantes :
+
+**Attention, j'ai configuré le mot de passe des clés dans mon .env, si vous ne souhaitez pas modifier le fichier .env alors mettre dans le prompt comme mot de passe : test**
+
+```bash
+docker-compose exec php mkdir -p config/jwt
+docker-compose exec php openssl genpkey -out config/jwt/private.pem -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096
+docker-compose exec php openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout
+```
+
+Lors de la création de la clé privée, un mot de passe vous sera demandé. Ce mot de passe doit être ajouté à votre fichier .env sous la variable JWT_PASSPHRASE (test configuré par défaut)
+
+
 
 
 ## Utilisation
@@ -73,6 +88,17 @@ Cette API contient les routes suivantes :
 - `GET /api/expense/{id}` : récupérer une note de frais spécifique
 - `PUT /api/expense/{id}` : mettre à jour une note de frais spécifique
 - `DELETE /api/expense/{id}` : supprimer une note de frais spécifique
+
+
+## Connexion
+
+Pour vous connecter, utilisez le format de requête :
+```json
+{
+  "email", "maximelechere.dev@gmail.com",
+  "password", "test"
+}
+```
 
 ## Tests
 
