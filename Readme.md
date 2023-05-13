@@ -13,7 +13,7 @@ Pour faire fonctionner ce projet, vous devez avoir installé Docker et Docker-Co
 ```bash
 id -u && id -g
 ```
-3. configurez le .env à la racine du projet avec les bons UID et GID
+3. **IMPORTANT** :  configurez le .env à la racine du projet avec les bons UID et GID
 4. dans le dossier courant tapper la commande: 
 ```bash
 sudo chown -R <votre-UID>:<votre-GID> ./*
