@@ -21,7 +21,7 @@ class UserProcessor implements ProcessorInterface
             return;
         }
 
-        $encodedPassword = $this->passwordEncoder->hashPassword($object, 'test');
+        $encodedPassword = $this->passwordEncoder->hashPassword($object, $object->getPassword());
         $object->setPassword($encodedPassword);
     }
 

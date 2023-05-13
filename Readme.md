@@ -16,7 +16,7 @@ id -u && id -g
 3. configurez le .env à la racine du projet avec les bons UID et GID
 4. dans le dossier courant tapper la commande: 
 ```bash
-sudo chown -R ./* <votre-UID>:<votre-GID>
+sudo chown -R <votre-UID>:<votre-GID> ./*
 ```
 
 ### Construisez et démarrez les conteneurs Docker :
@@ -52,15 +52,15 @@ docker-compose exec php bin/console d:m:m
 3. créer la base de donnée de test et lancer les migrations: 
    
 ```bash
-docker-compose exec bin/console d:d:c --env=test
-docker-compose exec bin/console d:m:m --env=test
+docker-compose exec php bin/console d:d:c --env=test
+docker-compose exec php bin/console d:m:m --env=test
 ```
 
 
 1. lancez les fixtures sur la base de donnée. (les fixtures sont regnérées à chaque test pour les tests)
 
 ```bash
-docker-compose exec bin/console hautelook:fixtures:load
+docker-compose exec php bin/console hautelook:fixtures:load
 ```
 
 
