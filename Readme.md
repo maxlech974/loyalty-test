@@ -89,6 +89,8 @@ Cette API contient les routes suivantes :
 - `PUT /api/expense/{id}` : mettre à jour une note de frais spécifique
 - `DELETE /api/expense/{id}` : supprimer une note de frais spécifique
 
+**Pour tester les routes, un export Insomnia contenant tous les endpoints de l'application est mis à disposition. Les formats d'envoi de données pour les requêtes POST et PUT sont déjà configurés dans cet export.**
+
 
 ## Connexion
 
