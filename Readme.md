@@ -102,6 +102,79 @@ Pour vous connecter, utilisez le format de requête :
 }
 ```
 
+- Lors de la connexion vous recevrez un token JWT. Pour toutes les autres requêtes veuillez mettre le Token en header dans "Authorization: Bearer <VOTRE_TOKEN>"
+
+
+## Requêtes Curl:
+
+Pour tester l'application, vous trouverez les requêtes suivantes: 
+
+**Attention** : le port des requetes suivantes est à changer si vous avez changé le .env
+
+1. Login: 
+
+``` bash
+curl -X POST \
+     -H "Content-Type: application/json" \
+     -d '{"email":"maximelechere.dev@gmail.com", "password":"test"}' \
+     http://localhost:8087/api/login
+```
+
+2. Définissez le TOKEN en variable d'environnement pour toutes vos autres requêtes: 
+
+```bash
+JWT_TOKEN=<COPIEZ_TOKEN_DE_LA_REPONSE>
+```
+
+2. Créer une nouvelle note de frais :
+
+``` bash
+curl -X POST \
+     -H "Content-Type: application/json" \
+     -H "Authorization: Bearer $JWT_TOKEN" \
+     -d '{"noteDate": "10/05/2023","amount": "99.33","type": "restaurant","companyName": "test"}' \
+     http://localhost:8087/api/expense
+```
+
+3. Récupérer toutes les notes de frais :
+
+``` bash
+curl -X GET \
+     -H "Content-Type: application/json" \
+     -H "Authorization: Bearer $JWT_TOKEN" \
+     http://localhost:8087/api/expense
+```
+
+4. Récupérer une note de frais (défault la première entrée en BDD) :
+
+``` bash
+curl -X GET \
+     -H "Content-Type: application/json" \
+     -H "Authorization: Bearer $JWT_TOKEN" \
+     http://localhost:8087/api/expense/1
+```
+
+5. Mettre à jour une note de frais : 
+
+``` bash
+curl -X PUT \
+     -H "Content-Type: application/json" \
+     -H "Authorization: Bearer $JWT_TOKEN" \
+     -d '{"noteDate": "10/05/2023","amount": "50.33","type": "autre","companyName": "test"}' \
+     http://localhost:8087/api/expense/1
+
+```
+
+6. Effacer une note de frais :
+
+``` bash
+curl -X DELETE \
+     -H "Content-Type: application/json" \
+     -H "Authorization: Bearer $JWT_TOKEN" \
+     http://localhost:8087/api/expense/1
+```
+
+
 ## Tests
 
 Pour lancer les tests, vous pouvez exécuter la commande suivante à partir du répertoire racine du projet :
