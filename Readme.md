@@ -110,7 +110,7 @@ Pour lancer les tests, vous pouvez exécuter la commande suivante à partir du r
 docker-compose exec php bin/phpunit
 ```
 
-Cela exécutera tous les tests unitaires et fonctionnels de l'application.
+Cela exécutera tous les tests fonctionnels de l'application.
 
 ## Choix de la Stack Technique
 
